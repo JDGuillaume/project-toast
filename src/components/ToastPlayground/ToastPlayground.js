@@ -1,9 +1,8 @@
 import React from "react";
 
 import Button from "../Button";
-import Toast from "../Toast";
+import ToastShelf from "../ToastShelf";
 
-import useToggle from "../../hooks/useToggle";
 import styles from "./ToastPlayground.module.css";
 
 const VARIANT_OPTIONS = ["notice", "warning", "success", "error"];
@@ -11,12 +10,19 @@ const VARIANT_OPTIONS = ["notice", "warning", "success", "error"];
 function ToastPlayground() {
   const [message, setMessage] = React.useState("");
   const [variant, setVariant] = React.useState(VARIANT_OPTIONS[0]);
-  const [visible, toggleVisibility] = useToggle(false);
+  const [toasts, setToasts] = React.useState([]);
 
-  const handleSubmit = (event) => {
+  const handleCreateToast = (event) => {
     event.preventDefault();
 
-    if (!visible) toggleVisibility();
+    const nextToasts = [
+      ...toasts,
+      { message, variant, id: crypto.randomUUID() },
+    ];
+
+    setToasts(nextToasts);
+    setMessage("");
+    setVariant(VARIANT_OPTIONS[0]);
   };
 
   return (
@@ -26,14 +32,10 @@ function ToastPlayground() {
         <h1>Toast Playground</h1>
       </header>
 
-      {visible && (
-        <Toast variant={variant} handleDismiss={toggleVisibility}>
-          {message}
-        </Toast>
-      )}
+      <ToastShelf toasts={toasts} setToasts={setToasts} />
 
       <div className={styles.controlsWrapper}>
-        <form onSubmit={handleSubmit}>
+        <form onSubmit={handleCreateToast}>
           <div className={styles.row}>
             <label
               htmlFor="message"
