@@ -16,7 +16,7 @@ function ToastPlayground() {
   const handleCreateToast = (event) => {
     event.preventDefault();
 
-    addToast({ message, variant });
+    addToast(message, variant);
 
     setMessage("");
     setVariant(VARIANT_OPTIONS[0]);
